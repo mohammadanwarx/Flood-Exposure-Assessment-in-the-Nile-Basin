@@ -1,61 +1,87 @@
-# Flood Exposure Geospatial Pipeline
+# Flood Exposure Assessment in the Nile Basin Using DEM-Derived Flow Accumulation and Drainage Network Analysis
 
-A simplified geospatial analysis pipeline for assessing flood exposure using raster and vector data.
+A comprehensive geospatial analysis pipeline for flood exposure assessment in the Nile Basin using DEM processing, hydrological analysis, tensor operations, and data cubes.
 
 ## Features
 
-- **Data I/O**: Load and save raster (GeoTIFF) and vector (Shapefile, GeoJSON) data
-- **Preprocessing**: Reprojection, masking, and clipping operations
-- **Zonal Statistics**: Calculate exposure metrics within administrative boundaries
-- **Visualization**: Generate maps and plots for results
+- **DEM Processing**: Load, preprocess, and analyze Digital Elevation Models
+- **Hydrology Analysis**: Flow direction, accumulation, watershed delineation, and TWI calculation
+- **Flood Exposure**: Calculate flood depth, identify exposed areas, and assess population risk
+- **Tensor Operations**: Multi-dimensional array processing, normalization, and ML-ready patch extraction
+- **Data Cubes**: Time-series flood analysis with xarray-based data cubes
+- **Visualization**: Generate maps and plots for all analysis results
 
 ## Project Structure
 
 ```
 flood-exposure-geospatial-pipeline/
 ├── data/
-│   └── raw/           # Input raster and vector data
-├── src/               # Source code (4 simple modules)
-│   ├── data_io.py         # Load/save raster and vector data
-│   ├── preprocessing.py   # Reproject, mask, clip operations
-│   ├── analysis.py        # Zonal statistics and exposure metrics
-│   └── visualization.py   # Maps and plots
-├── tests/             # Unit tests for all modules
-├── notebooks/         # Jupyter notebooks for analysis
-├── outputs/           # All analysis outputs (figures, results)
-└── example.py         # Example workflow script
+│   └── raw/
+│       ├── raster/         # DEM, flood depth, population data
+│       └── vector/         # Administrative boundaries, features
+├── src/
+│   ├── dem_processing.py   # DEM loading, slope, resampling
+│   ├── hydrology.py        # Flow direction, accumulation, TWI
+│   ├── exposure.py         # Flood depth, exposure assessment, risk mapping
+│   ├── tensors.py          # Tensor operations, normalization, PCA
+│   ├── cubes.py            # Data cube management with xarray
+│   └── visualization.py    # Plotting functions
+├── tests/                  # Comprehensive unit tests
+├── notebooks/              # Jupyter notebooks for analysis
+├── outputs/                # Analysis results and figures
+└── example.py              # Example workflow script
 ```
 
 ## Installation
 
+### Using Poetry (Recommended)
+
+```bash
+poetry install
+poetry shell
+```
+
+### Using Conda
+
+```bash
+conda env create -f environment.yml
+conda activate flood-exposure
+```
+
 ### Using pip
 
 ```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
 ## Quick Start
 
 ```python
-from src.data_io import load_raster, load_vector
-from src.analysis import compute_zonal_statistics
-from src.visualization import plot_zonal_statistics
+from src.dem_processing import load_dem, calculate_slope
+from src.hydrology import calculate_flow_direction, calculate_twi
+from src.exposure import calculate_flood_depth, identify_flooded_areas
+from src.visualization import plot_raster
 
-# Load flood depth raster
-flood_data, metadata = load_raster("data/raw/raster/flood_depth.tif")
+# Load DEM
+dem, metadata = load_dem("data/raw/raster/dem.tif")
+cellsize = metadata['transform'][0]
 
-# Load administrative boundaries
-admin_boundaries = load_vector("data/raw/vector/boundaries.shp")
+# Calculate terrain derivatives
+slope = calculate_slope(dem, cellsize)
 
-# Calculate exposure metrics
-results = compute_zonal_statistics(
-    "data/raw/raster/flood_depth.tif",
-    admin_boundaries,
-    stats=['mean', 'max', 'sum']
-)
+# Hydrological analysis
+flow_dir = calculate_flow_direction(dem)
+twi = calculate_twi(dem, flow_acc, slope, cellsize)
+
+# Flood exposure analysis
+water_level = 50.0
+flood_depth = calculate_flood_depth(dem, water_level)
+flood_mask = identify_flooded_areas(flood_depth, threshold=0.1)
 
 # Visualize results
-plot_zonal_statistics(results, 'mean', title='Mean Flood Depth by Region')
+plot_raster(flood_depth, title='Flood Depth (m)', cmap='Blues')
 ```
 
 ## Usage
@@ -68,14 +94,45 @@ Run the test suite:
 
 ```bash
 # Run all tests
-pytest tests/
+pytest tests/ -v
 
 # Run with coverage
-pytest tests/ --cov=src
+pytest tests/ --cov=src --cov-report=html
 
 # Run specific test file
-pytest tests/test_analysis.py
+pytest tests/test_exposure.py
+pytest tests/test_hydrology.py
 ```
+
+## Modules Overview
+
+### DEM Processing (`dem_processing.py`)
+- `load_dem()` - Load DEM raster files
+- `fill_depressions()` - Fill sinks for hydrological analysis
+- `calculate_slope()` - Calculate terrain slope
+- `resample_dem()` - Resample DEM to different resolution
+
+### Hydrology (`hydrology.py`)
+- `calculate_flow_direction()` - D8 flow direction algorithm
+- `calculate_flow_accumulation()` - Flow accumulation analysis
+- `extract_stream_network()` - Extract streams from flow accumulation
+- `calculate_twi()` - Topographic Wetness Index
+
+### Exposure (`exposure.py`)
+- `calculate_flood_depth()` - Calculate flood depth from DEM and water level
+- `identify_flooded_areas()` - Binary flood masks
+- `assess_population_exposure()` - Population exposure statistics
+- `generate_risk_map()` - Risk = Hazard × Vulnerability
+
+### Tensors (`tensors.py`)
+- `create_geospatial_tensor()` - Stack multiple bands into tensor
+- `normalize_tensor()` - Min-max, z-score, robust normalization
+- `extract_patches()` - Extract patches for ML training
+
+### Data Cubes (`cubes.py`)
+- `GeospatialCube` - Class for managing multi-dimensional geospatial data
+- `create_flood_cube()` - Create time-series flood data cubes
+- `merge_cubes()` - Combine multiple data cubes
 
 ## License
 
