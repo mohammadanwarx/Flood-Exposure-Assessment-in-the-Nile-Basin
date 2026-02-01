@@ -1,4 +1,4 @@
-# Flood Exposure Geospatial Pipeline
+# Rainfall–Terrain Driven Flood Exposure Assessment Using Multi-Year Hydro-Meteorological Data
 
 **Rainfall–Terrain Driven Flood Propensity Modelling and Exposure Assessment in the Nile Basin Region**
 
