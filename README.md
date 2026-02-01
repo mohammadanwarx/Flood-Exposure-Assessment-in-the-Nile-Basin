@@ -294,7 +294,7 @@ The pipeline produces 7 key visualizations organized by analysis phase:
 
 **1. Average Monthly Rainfall Time Series**
 
-![Average Monthly Rainfall Over AOI](./outputs/Average%20Monthly%20Rainfall%20Over%20AOI.png)
+![Average Monthly Rainfall Over AOI](./outputs/Average_Monthly_Rainfall_Over_AOI.png)
 
 *Temporal trend of mean monthly rainfall across the AOI (2018-2025) showing seasonal patterns and inter-annual variability.*
 
@@ -302,7 +302,7 @@ The pipeline produces 7 key visualizations organized by analysis phase:
 
 **2. Monthly Rainfall Pattern by Year**
 
-![Monthly Rainfall Pattern by Year](./outputs/Monthly%20Rainfall%20Pattern%20by%20Year.png)
+![Monthly Rainfall Pattern by Year](./outputs/Monthly_Rainfall_Pattern_by_Year.png)
 
 *Year-over-year comparison of monthly rainfall highlighting the wet season (July-September) peak across all years.*
 
@@ -320,7 +320,7 @@ The pipeline produces 7 key visualizations organized by analysis phase:
 
 **4. Flood Propensity Index (FPI)**
 
-![Flood Propensity Visualization](./outputs/Flood%20Propensity%20Visualization.png)
+![Flood Propensity Visualization](./outputs/Flood_Propensity_Visualization.png)
 
 *Continuous FPI raster (0-1 scale) showing spatial distribution of flood-prone areas based on rainfall and terrain indicators.*
 
